@@ -13,7 +13,8 @@ int main()
     scanf("%d", &nop);
     for(i=0; i<nop; i++)
     {
-//printf("Enter productions Number %d : ",i+1); scanf(" %s",prod[i]);
+//printf("Enter productions Number %d : ",i+1); 
+        scanf(" %s",prod[i]);
     }
     do
     {
