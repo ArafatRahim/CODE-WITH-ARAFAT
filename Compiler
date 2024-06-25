@@ -1,0 +1,132 @@
+6.....
+
+#include<bits/stdc++.h>
+
+using namespace std;
+int main()
+{
+   int i=0,j=0,x=0,n,flag=0;
+   void *p,*add[15];
+   char ch,srch,b[15],d[15],c;
+   cout<<"expression terminated by $: ";
+   while((cin>>c))
+   {
+    if(c=='$')
+    {
+        break;
+    }
+    b[i]=c;
+    i++;
+   }
+   n=i-1;
+   cout<<"given expression: ";
+   for(int z=0;z<=n;z++)
+   {
+    cout<<b[z];
+   }
+   cout<<endl;
+   cout<<"symbol table:"<<endl;
+   cout<<"symbol"<<"    "<<"adress    "<<"type"<<endl;
+   for(int z=0;z<=n;z++)
+   {
+     c=b[z];
+     if(isalpha('c'-0))
+     {
+        if(z==n)
+        {
+            p=malloc(c);
+            add[x]=p;
+            d[x]=c;
+            cout<<"    "<<c<<"    "<<p<<"  "<<"identifier"<<endl;
+        }
+        else
+        {
+            ch=b[z+1];
+            if (ch == '+'  ch == '-'  ch == '*' || ch == '=')
+            {
+                p=malloc(c);
+                add[x]=p;
+                d[x]=c;
+                cout<<"    "<<c<<"    "<<p<<"  "<<"identifier"<<endl;
+                x++;
+            }
+        }
+     }
+   }
+   cout<<"the symbol is to be searched"<<endl;
+   cin>>srch;
+   for(int z=0;z<=x;z++)
+   {
+        if(srch==d[z])
+        {
+            cout<<"symbol found"<<endl;
+            cout<<srch<<" "<<"address @"<<add[z]<<" "<<endl;
+            flag=1;
+        }
+   }
+   if(flag==0)
+   {
+    cout<<"symbol not found"<<endl;
+   }
+}
+
+
+7-8.....
+#include<bits/stdc++.h>
+using namespace std;
+void getFirst( map<char, vector<string>>& rules, map<char, string>& first, char left ) {
+    if (first.find( left ) != first.end())return;
+    first[ left ] = "";
+    for (auto& it : rules[ left ]) {
+        if (islower( it[ 0 ] ) or it[ 0 ] == '&')
+            first[ left ] += it[ 0 ];
+        else {
+            getFirst( rules, first, it[ 0 ] );
+            string res = first[ it[ 0 ] ];
+            int i = 1;
+            while (res.find( '&' ) != string::npos and i < it.length() and it[ i ] != left) {
+                res.replace( res.find( '&' ), 1, "" );
+                first[ left ] += res;
+                getFirst( rules, first, it[ i ] );
+                res = first[ it[ i++ ] ];
+            }
+            first[ left ] += res;
+        }
+    }
+    sort( first[ left ].begin(), first[ left ].end() );
+    first[ left ].erase( unique( first[ left ].begin(), first[ left ].end() ), first[ left ].end() );
+}
+void getFollow( map<char, vector<string>>& rules, map<char, string>& first, map<char, string>& follow ) {
+    follow[ 'S' ] = "$";
+    for (auto& it : rules) {
+        for (auto& it2 : it.second) {
+            for (int i = it2.length() - 1;i > 0;i--) {
+                if (islower( it2[ i ] ) and isupper( it2[ i - 1 ] )) {
+                    follow[ it2[ i - 1 ] ] += it2[ i ];
+                }
+                else if (isupper( it2[ i ] ) and isupper( it2[ i - 1 ] )) {
+                    follow[ it2[ i - 1 ] ] += first[ it2[ i ] ];
+                    if (first[ it2[ i ] ].find( '&' ) != string::npos)
+                        follow[ it2[ i - 1 ] ] += follow[ it2[ i ] ];
+                }
+            }
+        }
+    }
+    for (auto& it : rules) {
+        for (auto& it2 : it.second) {
+            if (isupper( it2[ it2.length() - 1 ] )) {
+                follow[ it2[ it2.length() - 1 ] ] += follow[ it.first ];
+            }
+        }
+    }
+    for (auto& it : rules) {
+        for (auto& it2 : it.second) {
+            for (int i = it2.length() - 1;i > 0;i--) {
+                if (islower( it2[ i ] ) and isupper( it2[ i - 1 ] )) {
+                    follow[ it2[ i - 1 ] ] += it2[ i ];
+                }
+                else if (isupper( it2[ i ] ) and isupper( it2[ i - 1 ] )) {
+                    follow[ it2[ i - 1 ] ] += first[ it2[ i ] ];
+                    if (first[ it2[ i ] ].find( '&' ) != string::npos)
+
+                        follow[ it2[ i - 1 ] ] += follow[ it2[ i ] ];
